@@ -1,0 +1,80 @@
+/* Background for full section */
+.cards-section {
+  background: linear-gradient(135deg, #141414, #bbdefb);
+  border-radius: 20px;
+  padding: 60px 20px;
+  animation: fadeIn 1s ease;
+}
+
+/* Fade-in animation for entire section */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section title */
+.section-head h2 {
+  font-size: 2rem;
+  color: #003b87;
+}
+
+.section-head p {
+  max-width: 600px;
+  margin: 0 auto;
+  color: #555;
+}
+
+/* Service Card */
+.service-card {
+  background: #ffffff;
+  border-radius: 18px;
+  transition: all 0.3s ease;
+  border: 1px solid #e0e0e0;
+  animation: fadeInCard 0.6s ease;
+  animation-fill-mode: both;
+}
+
+/* Card fade-in with slight delay */
+@keyframes fadeInCard {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Hover animation */
+.service-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+}
+
+/* Logo animation */
+.card-logo img {
+  width: 60px;
+  height: 60px;
+  transition: 0.3s;
+}
+
+.service-card:hover .card-logo img {
+  transform: scale(1.15);
+}
+
+/* Responsive fixing */
+@media (max-width: 768px) {
+  .section-head h2 {
+    font-size: 1.7rem;
+  }
+  .service-card {
+    padding: 25px;
+  }
+}

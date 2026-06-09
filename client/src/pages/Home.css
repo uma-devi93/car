@@ -1,0 +1,75 @@
+/* ===== Home Page Background  ===== */
+.home-wrapper {
+  min-height: 100vh;
+
+  background: url("data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAJQAxgMBIgACEQEDEQH/xAAWAAEBAQAAAAAAAAAAAAAAAAAAAQf/xAAeEAEAAgEEAwAAAAAAAAAAAAAAIZFRETFx8AFBYf/EABYBAQEBAAAAAAAAAAAAAAAAAAABAv/EABURAQEAAAAAAAAAAAAAAAAAAAAB/9oADAMBAAIRAxEAPwDaQGgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA7uAAAAAAAAAAAAAAAAAAAAAAAUACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFAARkgAISMgoQQACRkFAjIAQABBGQAgAAj0AAABAAkZWAAj4Ad3AAuzXmwAAAuzXmwALsAAADu4AAAAAAAF2AF2XYAa82qAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAB6AAPAAAAAAAAAAeQAAFH//2Q==")
+    center/cover no-repeat fixed;
+
+  padding-bottom: 40px;
+}
+
+/* ===== Container Layout ===== */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: auto;
+}
+
+/* ===== Section Spacing ===== */
+.section {
+  margin: 60px 0;
+  animation: fadeInUp 0.8s ease-in-out;
+}
+
+/* ===== Floating Chat Button ===== */
+.floating-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+
+  background: #2d495c;
+  color: white;
+
+  padding: 16px;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+  transition: 0.3s ease;
+  animation: floatPulse 2s infinite;
+}
+
+.floating-chat:hover {
+  transform: scale(1.1);
+}
+
+/* ===== Animations ===== */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(25px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes floatPulse {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .section {
+    margin: 40px 0;
+  }
+
+  .floating-chat {
+    padding: 14px;
+    font-size: 20px;
+  }
+}
