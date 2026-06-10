@@ -1,5 +1,5 @@
 import React from "react";
-import "./CarCarousel.css";
+import "./carCarousel.css";
 
 const CARS = [
   { id: 1, title: "Toyota Innova", img: "https://images.unsplash.com/photo-1542362567-b07e54358753?w=1200&q=80&auto=format&fit=crop" },
