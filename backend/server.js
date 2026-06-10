@@ -28,6 +28,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/cars", carRoutes);
 app.use("/api/otp", otpRoutes);
+app.get("/", (req, res) => {
+  res.send("Backend is running successfully ");
+});
 
 // PORT
 const PORT = process.env.PORT || 5000;
