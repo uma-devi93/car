@@ -3,46 +3,45 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import cors from "cors";
 
-// ROUTES
 import authRoutes from "./routes/authRoutes.js";
+import otp from "./routes/otp.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
-import carRoutes from "./routes/carRoutes.js";
-import otpRoutes from "./routes/otp.js";
 
 dotenv.config();
 
 const app = express();
 
 // MIDDLEWARE
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// Fix %0A bug
+// DEBUG LOG
 app.use((req, res, next) => {
-  req.url = req.url.trim();
+  console.log("👉 METHOD:", req.method, "| URL:", req.url);
+  console.log("👉 BODY:", req.body);
   next();
 });
 
-// ROUTES
+// ROUTES (IMPORTANT)
 app.use("/api/auth", authRoutes);
+app.use("/api/otp", otp);
 app.use("/api/bookings", bookingRoutes);
-app.use("/api/cars", carRoutes);
-app.use("/api/otp", otpRoutes);
+
+// TEST ROUTE
 app.get("/", (req, res) => {
-  res.send("Backend is running successfully ");
+  res.send("Backend running 🚀");
 });
 
-// PORT
-const PORT = process.env.PORT || 5000;
-
-// DATABASE + SERVER
+// DB CONNECTION
 mongoose
   .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("MongoDB Connected");
-
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+    console.log("MongoDB Connected Successfully!");
+    app.listen(process.env.PORT || 5000, () => {
+      console.log("Server running on port 5000 🚀");
     });
   })
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.log("DB Error:", err);
+  });
