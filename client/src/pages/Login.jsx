@@ -5,28 +5,57 @@ import axios from "axios";
 export default function Login() {
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({ email: "", password: "" });
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
 
-  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
+  const [loading, setLoading] = useState(false);
 
+  // INPUT CHANGE
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // SUBMIT
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!form.email || !form.password) {
-      alert("All fields are required!");
+    // Data-vil ulla un-wanted spaces-ai trim seigிறோம்
+    const userEmail = form.email.trim().toLowerCase();
+    const userPassword = form.password;
+
+    console.log("👉 SENDING TO BACKEND:", { email: userEmail, password: userPassword });
+
+    if (!userEmail || !userPassword) {
+      alert("All fields required!");
       return;
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/auth/login", form);
-      
-      // Save JWT token
-      localStorage.setItem("token", res.data.token);
+      setLoading(true);
 
-      alert("Login Successful!");
-      navigate("/carbooking"); 
-    } catch (error) {
-      alert(error.response?.data?.msg || "Invalid Email or Password");
+      const res = await axios.post(
+        "http://localhost:5000/api/auth/login",
+        {
+          email: userEmail,
+          password: userPassword,
+        }
+      );
+
+     console.log("🚀 LOGIN SUCCESS:", res.data);
+localStorage.setItem("token", res.data.token);
+alert("Login Successful 🚀");
+window.location.href = "/carbooking";
+    } catch (err) {
+      // Backend-il irundhu varum exact error-ai console-il kaattum
+      console.error("❌ BACKEND RESPONSE ERROR:", err.response?.data);
+      alert(err.response?.data?.msg || "Login Failed");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -34,35 +63,72 @@ export default function Login() {
     <div style={styles.wrapper}>
       <form style={styles.form} onSubmit={handleSubmit}>
         <h2 style={styles.title}>Login</h2>
-        <input type="email" name="email" placeholder="Enter Email" onChange={handleChange} style={styles.input}/>
-        <input type="password" name="password" placeholder="Enter Password" onChange={handleChange} style={styles.input}/>
-        <button type="submit" style={styles.button}>Login</button>
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email"
+          value={form.email}
+          onChange={handleChange}
+          style={styles.input}
+          autoComplete="username"
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter Password"
+          value={form.password}
+          onChange={handleChange}
+          style={styles.input}
+          autoComplete="current-password"
+          required
+        />
+
+        <button type="submit" style={styles.button} disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </form>
     </div>
   );
 }
 
+// STYLES
 const styles = {
   wrapper: {
     minHeight: "100vh",
-    backgroundImage: "url('https://img.freepik.com/free-vector/realistic-car-headlights-ad-composition-headlights-with-green-purple-illumination_1284-56577.jpg')",
-    backgroundSize: "cover",
-    backgroundPosition: "center",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "20px",
+    backgroundImage:
+      "url('https://freepik.com')",
+    backgroundSize: "cover",
   },
   form: {
     width: "350px",
     padding: "25px",
-    background: "rgba(248, 236, 236, 0.95)",
+    background: "rgba(255,255,255,0.9)",
     borderRadius: "10px",
     display: "flex",
     flexDirection: "column",
     gap: "15px",
   },
-  title: { textAlign: "center", fontSize: "24px", marginBottom: "5px" },
-  input: { padding: "12px", borderRadius: "6px", border: "1px solid #ccc", fontSize: "16px" },
-  button: { padding: "12px", background: "#28a745", color: "#fff", border: "none", borderRadius: "6px", fontSize: "16px", cursor: "pointer" },
+  title: {
+    textAlign: "center",
+    fontSize: "24px",
+  },
+  input: {
+    padding: "12px",
+    borderRadius: "6px",
+    border: "1px solid #ccc",
+  },
+  button: {
+    padding: "12px",
+    background: "#28a745",
+    color: "#fff",
+    border: "none",
+    borderRadius: "6px",
+    cursor: "pointer",
+  },
 };

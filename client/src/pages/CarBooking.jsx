@@ -116,13 +116,19 @@ export default function CarBooking() {
     }
   };
 
-  const bookNow = async () => {
+const bookNow = async () => {
+  try {
     const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Please login first");
+      return;
+    }
 
     const res = await axios.post(
       `${API}/bookings/create`,
       {
-        car: selectedCar.name,
+        car: selectedCar?.name,
         pickup,
         drop,
         pickupDate,
@@ -133,29 +139,43 @@ export default function CarBooking() {
         paymentMethod,
       },
       {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
-    setBookings([...bookings, res.data]);
-    alert("Booking Successful 🚗");
-    resetAll();
-  };
+    console.log("Booking Success:", res.data);
 
-  const resetAll = () => {
-    setSelectedCar(null);
-    setPickup("");
-    setDrop("");
-    setPickupDate("");
-    setDropDate("");
-    setPickupTime("");
-    setDropTime("");
-    setAmount(0);
-    setPaymentMethod("");
-    setOtpSent(false);
-    setEnteredOtp("");
-    setOtpVerified(false);
-  };
+    setBookings((prev) => [...prev, res.data]);
+
+    alert("Booking Successful 🚗");
+
+    resetAll();
+  } catch (error) {
+    console.error("Booking Error:", error);
+
+    alert(
+      error.response?.data?.message ||
+      "Booking Failed ❌"
+    );
+  }
+};
+
+const resetAll = () => {
+  setSelectedCar(null);
+  setPickup("");
+  setDrop("");
+  setPickupDate("");
+  setDropDate("");
+  setPickupTime("");
+  setDropTime("");
+  setAmount(0);
+  setPaymentMethod("");
+  setOtpSent(false);
+  setEnteredOtp("");
+  setOtpVerified(false);
+};
 
   return (
     <div className="car-booking-container">
