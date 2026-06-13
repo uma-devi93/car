@@ -68,7 +68,7 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/refund" element={<Refund />} />
         <Route path="/cancel" element={<Cancel />} />
-        
+       
       </Routes>
     </Router>
   );

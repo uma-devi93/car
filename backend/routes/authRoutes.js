@@ -5,78 +5,82 @@ import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
-// =======================
 // REGISTER
-// =======================
 router.post("/register", async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    let { name, email, password } = req.body;
 
-    if (!name || !email || !password) {
-      return res.status(400).json({ msg: "All fields required" });
+    if (!email || !password || !name) {
+      return res.status(400).json({ msg: "All fields are required" });
     }
+
+    email = email.trim().toLowerCase();
 
     const userExists = await User.findOne({ email });
-    if (userExists) {
+    if (userExists)
       return res.status(400).json({ msg: "User already exists" });
-    }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashed = await bcrypt.hash(password, 10);
 
-    await User.create({
+    const user = await User.create({
       name,
       email,
-      password: hashedPassword,
+      password: hashed,
     });
 
-    res.json({ msg: "Registered successfully 🚀" });
-
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ msg: "Server error" });
+    res.json({ msg: "Registered successfully" });
+  } catch (error) {
+    console.error("Register Error:", error);
+    res.status(500).json({ msg: "Server Error" });
   }
 });
 
-// =======================
 // LOGIN
-// =======================
 router.post("/login", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    let { email, password } = req.body;
+
+    console.log("📩 BACKEND RECEIVED DATA:", { email, password });
 
     if (!email || !password) {
-      return res.status(400).json({ msg: "Email & Password required" });
+      return res.status(400).json({ msg: "Email and password are required" });
     }
 
+    // Safety: Trim spaces and change to lower case
+    email = email.trim().toLowerCase();
+
+    // Database check
     const user = await User.findOne({ email });
     if (!user) {
+      console.log(`❌ User with email ${email} NOT found in database`);
       return res.status(400).json({ msg: "User not found" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    // Password check
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      console.log("❌ Password did not match");
       return res.status(400).json({ msg: "Invalid password" });
     }
 
+    // Token checking
+    if (!process.env.JWT_SECRET) {
+      console.error("❌ CRITICAL: JWT_SECRET is missing in .env file!");
+      return res.status(500).json({ msg: "Server Configuration Error" });
+    }
+
     const token = jwt.sign(
-      { id: user._id },
+      { user: { id: user._id } },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.json({
-      msg: "Login successful 🚀",
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-      },
-    });
+    console.log("✅ LOGIN SUCCESS FOR:", email);
+    res.json({ msg: "Login successful", token });
 
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ msg: "Server error" });
+  } catch (error) {
+    console.error("Login Error:", error);
+    res.status(500).json({ msg: "Server Error" });
   }
 });
 
